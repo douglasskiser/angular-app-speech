@@ -219,6 +219,7 @@
 
     this.start = function(options) {
       initIfNeeded();
+      
       options = options || {};
 
       if (options.autoRestart !== undefined) {

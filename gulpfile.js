@@ -35,6 +35,7 @@
     function build() {
         return gulp.src(paths.js.src)
             .pipe(plugins.uglify())
+            .pipe(plugins.rename('app-speech.min.js'))
             .pipe(gulp.dest(paths.dest));
     }
 
