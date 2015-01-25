@@ -43,6 +43,11 @@ angular.module('app')
 
 ## API
 
+##isSupported()
+Returns boolean specifying whether SpeechRecognition is supported by the browser.
+###Return:
+- **Boolean** *isSupported* - Is SpeechRecognition available.
+
 ##start([options])
 Start listening.
 Recieves an optional options object which supports the following options:
@@ -52,6 +57,9 @@ Recieves an optional options object which supports the following options:
 ### Examples:
 
 ```js
+// only needs to be called once throughout an app.
+AppSpeech.start();
+
 // Start listening, don't restart automatically
 AppSpeech.start({autoRestart: false});
 
@@ -86,6 +94,55 @@ Returns the current language being used by AppSpeech if set.
 ###Return:
 - **String** *language* - The language (locale)
 
+##addCommands(commands)
+Add commands that AppSpeech will respond to. Commands can be added in multiple controllers or services.
+
+###Examples:
+```js
+angular.module('app')
+  .controller('AppCtrl', function($scope, AppSpeech) {
+    $scope.name = '';
+    
+    AppSpeech.addCommands({
+      'my name is :name': function(name) {
+        // must apply scope changes
+        $scope.$apply(function() {
+          $scope.name = name;
+        });
+      })
+      // only needs to be called once throughout an app
+      .run();
+  })
+  
+  .controller('AnotherCtrl', function($scope, AppSpeech) {
+    AppSpeech.addCommands({
+      'hello': function() {
+        alert('hello');
+      });
+  });
+```
+###Params:
+- **Object** *commands* - Commands that AppSpeech should listen to.
+
+##removeCommands([commandsToRemove])
+Remove existing commands by passing a single command phrase, an array of command phrases, or by passing no parameters in which all commands are removed.
+
+###Examples:
+```js
+var commands = {'hello': helloFunction, 'hi': helloFunction };
+
+// Remove all exisiton commands
+AppSpeech.removeCommands();
+
+// Add some commands
+AppSpeech.addCommands(commands);
+
+// Remove 'hello' command
+AppSpeech.removeCommands('hello');
+
+// Remove 'hello' and 'hi'
+AppSpeech.removeCommands(['hello', 'hi']);
+```
 
 ### Todo
-Finish API in readme.md
+Finish API in readme.md with addCallback()
